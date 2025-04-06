@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>LINE風チャット</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    fetch("/prompt")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("prompt-area").textContent = data.prompt;
+      });
+  });
+</script>
+
+<body>
+  <div id="chat-box"></div>
+  <div id="prompt-area">お題を読み込み中...</div>
+  <form id="chat-form">
+    <input type="text" id="user-input" placeholder="メッセージを入力">
+    <button type="submit">送信</button>
+  </form>
+
+  <script>
+    const chatBox = document.getElementById('chat-box');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userMessage = input.value;
+      appendMessage('user', userMessage);
+      input.value = '';
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage })
+      });
+      const data = await res.json();
+      appendMessage('bot', data.reply);
+    });
+
+    function appendMessage(sender, text) {
+      const div = document.createElement('div');
+      div.className = sender;
+      div.textContent = text;
+      chatBox.appendChild(div);
+    }
+  </script>
+</body>
+</html>
