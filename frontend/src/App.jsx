@@ -7,7 +7,7 @@ function App() {
   const [userAnswer, setUserAnswer] = useState("");
   const [currentPrompt, setCurrentPrompt] = useState("");
   const promptLoaded = useRef(false);
-  const API_BASE = "https://oogiri-app-backend-282266906227.asia-northeast1.run.app";
+  const API_BASE = "https://oogiri-app.onrender.com";
 
   // お題を1回だけ取得
   useEffect(() => {
