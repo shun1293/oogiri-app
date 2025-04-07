@@ -27,7 +27,7 @@ def prompt():
     try:
         print(">>> ENV API KEY:", os.getenv("OPENAI_API_KEY")) 
         gpt_response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "user",
@@ -50,7 +50,7 @@ def chat():
     try:
         user_message = request.json['message']
         gpt_response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": user_message}]
         )
         reply = gpt_response.choices[0].message.content
@@ -72,7 +72,7 @@ def evaluate():
 """
 
         gpt_response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": message}]
         )
 
@@ -91,7 +91,7 @@ def example():
         message = f"次の大喜利のお題に対して、シュールで非日常的な模範解答を3つ,箇条書きで出してください。模範解答ひとつごとに改行してください。ただし宇宙に関する言葉は使わないでください。答えは一文に収め、疑問形は使わないでください。模範解答以外の余計な説明などは言わないでください。\n\nお題: {prompt}"
 
         gpt_response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": message}]
         )
 
