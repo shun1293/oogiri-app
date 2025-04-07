@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, Response
 from flask_cors import CORS
 from openai import OpenAI
+import httpx
 import json
 import os
 
