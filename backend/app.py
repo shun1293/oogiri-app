@@ -9,7 +9,7 @@ CORS(app)
 
 # OpenAI APIキーの設定（環境変数から取得）
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+client = OpenAI(api_key="OPENAI_API_KEY", http_client=httpx.Client(transport=transport))
 
 @app.route('/')
 def index():
