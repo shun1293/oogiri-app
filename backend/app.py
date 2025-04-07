@@ -10,7 +10,7 @@ CORS(app)
 
 # OpenAI APIキーの設定（環境変数から取得）
 
-custom_http_client = httpx.client()
+custom_http_client = httpx.Client()
 
 client = OpenAI(
     api_key="OPENAI_API_KEY", 
