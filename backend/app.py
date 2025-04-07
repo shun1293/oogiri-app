@@ -13,7 +13,7 @@ CORS(app)
 custom_http_client = httpx.Client()
 
 client = OpenAI(
-    api_key="OPENAI_API_KEY", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
     http_client=custom_http_client
 )
 
