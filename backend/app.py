@@ -4,6 +4,7 @@ from openai import OpenAI
 import httpx
 import json
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__, static_folder="frontend/dist", static_url_path="")
 CORS(app)
