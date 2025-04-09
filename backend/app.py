@@ -10,8 +10,9 @@ CORS(app)
 
 # OpenAI APIキーの設定（環境変数から取得）
 
-custom_http_client = httpx.Client()
+load_dotenv()#.envファイルの中のAPIキーをOSの環境変数とみなしてos.environに代入する
 
+custom_http_client = httpx.Client()#OpenAIの第2変数が空であることを伝える。でないと古いverの変数が走ってエラーが起きるため
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY"), 
     http_client=custom_http_client
