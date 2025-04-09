@@ -25,7 +25,7 @@ def index():
 @app.route('/<path:path>')
 def serve_static(path):
     file_path = os.path.join(app.static_folder, path)
-    if os.path.exists(file_path);
+    if os.path.exists(file_path)
         return send_from_directory(app.static_older, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
