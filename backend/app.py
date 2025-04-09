@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, send_from_directory, jsonify, Response
 from flask_cors import CORS
 from openai import OpenAI
 import httpx
 import json
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="frontend/dist", static_url_path="")
 CORS(app)
 
 # OpenAI APIキーの設定（環境変数から取得）
@@ -19,8 +19,15 @@ client = OpenAI(
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/<path:path>')
+def serve_static(path):
+    file_path = os.path.join(app.static_folder, path)
+    if os.path.exists(file_path);
+        return send_from_directory(app.static_older, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.route("/prompt", methods=["GET"])
 def prompt():
