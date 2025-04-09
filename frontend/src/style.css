@@ -1,6 +1,6 @@
 /* 全体のチャット画面 */
 .chat-container {
-  max-width: 600px;
+  max-width: 100%;
   margin: auto;
   height: 100vh;
   display: flex;

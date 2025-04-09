@@ -7,7 +7,7 @@ function App() {
   const [userAnswer, setUserAnswer] = useState("");
   const [currentPrompt, setCurrentPrompt] = useState("");
   const promptLoaded = useRef(false);
-  const API_BASE = "https://oogiri-app.onrender.com";
+  const API_BASE = import.meta.env.VITE_API_BASE;
 
   // お題を1回だけ取得
   useEffect(() => {
