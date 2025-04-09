@@ -25,7 +25,7 @@ def index():
 @app.route('/<path:path>')
 def serve_static(path):
     file_path = os.path.join(app.static_folder, path)
-    if os.path.exists(file_path)
+    if os.path.exists(file_path):
         return send_from_directory(app.static_older, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
@@ -39,7 +39,7 @@ def prompt():
             messages=[
                 {
                     "role": "user",
-                    "content": "シュールで答えやすい大喜利のお題を1つ出力してください。ただし宇宙に関する言葉は使わないでください。日本人が知っている固有名詞や時事ネタに関するお題を5分の1程度の確率で出してください。お題は必ず疑問形にしてください。会話文や説明は一切書かず、お題の文章だけを出力してください。"
+                    "content": "お笑いの大喜利のお題を1つ出力してください。日本人が知っている固有名詞や時事ネタに関するお題を5分の1程度の確率で出してください。お題は必ず疑問形にしてください。会話文や説明は一切書かず、お題の文章だけを出力してください。"
                 }
             ]
         )
