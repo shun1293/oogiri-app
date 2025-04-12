@@ -87,7 +87,7 @@ function App() {
       { sender: "bot", text: `📝 採点結果：${data.result}` },
     ]);
     disableButtonsById(id, "evaluate");
-    setLoadingCommon(false); //loadingをオンに
+    setLoadingCommon(false); //loadingをオフに
   };
 
   // 模範解答処理
@@ -140,7 +140,7 @@ function App() {
   //メッセージが出るたびに最下部に自動スクロール
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [loading,messages]);
+  }, [loading,messages,loadingCommon]);
 
   return (
     <div className="chat-container">
