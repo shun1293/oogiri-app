@@ -16,20 +16,8 @@ function App() {
     const fetchPrompt = async () => {
       if (promptLoaded.current) return;//1回しか実行しないようにする
       promptLoaded.current = true;
-      
-      //スマホでキーボードが出たとき用に画面vhのリサイズ
-      const resizeHandler = () => {
-        const viewportHeight = window.innerHeight;
-        document.documentElement.style.setProperty('--vh', `${viewportHeight * 0.01}px`);
-      };
-
-      window.addEventListener('resize', resizeHandler);
-      resizeHandler();
-
-      return () => window.removeEventListener('resize', resizeHandler);
-
       setLoading(true); //loadingをオンに
-
+      
       try {
         const res = await fetch(`${API_BASE}/prompt`); //awaitの中は処理が終わるまで時間が止まり、他は処理が動き続ける。.envファイルの中のflaskURL/promptのjsonお題を取る
         const data = await res.json();//resの中身のjsonを読んでjsで読めるようにする
@@ -43,6 +31,19 @@ function App() {
     };
     fetchPrompt();// fetchPromptを実行する
   }, []); //[]が空だと最初のページ読み込み（マウント）時だけ実行
+
+  useEffect(() => {
+      //スマホでキーボードが出たとき用に画面vhのリサイズ
+      const resizeHandler = () => {
+        const viewportHeight = window.innerHeight;
+        document.documentElement.style.setProperty('--vh', `${viewportHeight * 0.01}px`);
+      };
+      window.addEventListener('resize', resizeHandler);
+      resizeHandler();
+
+      return () => window.removeEventListener('resize', resizeHandler);
+    },[]);
+      
 
   // 回答送信
   const handleSubmit = async (e) => {
