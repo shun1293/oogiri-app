@@ -3,6 +3,7 @@ import "./style.css";
 
 function App() {
   const [loading, setLoading] = useState(false);
+  const [loadingCommon, setLoadingCommon] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [userAnswer, setUserAnswer] = useState("");
@@ -74,6 +75,7 @@ function App() {
 
   // 採点処理
   const handleEvaluate = async (id) => {
+    setLoadingCommon(true); //loadingをオンに
     const res = await fetch(`${API_BASE}/evaluate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,10 +87,12 @@ function App() {
       { sender: "bot", text: `📝 採点結果：${data.result}` },
     ]);
     disableButtonsById(id, "evaluate");
+    setLoadingCommon(false); //loadingをオンに
   };
 
   // 模範解答処理
   const handleExample = async (id) => {
+    setLoadingCommon(true); //loadingをオンに
     const res = await fetch(`${API_BASE}/example`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -100,6 +104,7 @@ function App() {
       { sender: "bot", text: `📚 模範解答：\n${data.example}` },
     ]);
     disableButtonsById(id, "example");
+    setLoadingCommon(false); //loadingをオフに
   };
 
   // ボタンを個別に無効化
@@ -179,13 +184,25 @@ function App() {
                    null
           )}
         <div ref={bottomRef} />
+        {loadingCommon ? (
+            <div className="loading-area">
+              <span>生</span>
+              <span>成</span>
+              <span>中</span>
+              <span>…</span>
+              <span>…</span>
+            </div>
+                ) : (
+                   null
+          )}
+        <div ref={bottomRef} />
       </div>
 
       <form onSubmit={handleSubmit} className="input-bar">
         <input
           value={input} //この<input>に入力された値はinputに入る
           onChange={(e) => setInput(e.target.value)}//入力フォームの内容が変わったら、inputの中をこの<input>のvalueに更新する（setInput）する
-          placeholder="さらに解答する"
+          placeholder="解答を入力してください"
         />
         <button type="submit">送信</button>
       </form>
