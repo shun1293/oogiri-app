@@ -16,6 +16,17 @@ function App() {
     const fetchPrompt = async () => {
       if (promptLoaded.current) return;//1回しか実行しないようにする
       promptLoaded.current = true;
+      
+      //スマホでキーボードが出たとき用に画面vhのリサイズ
+      const resizeHandler = () => {
+        const viewportHeight = window.innerHeight;
+        document.documentElement.style.setProperty('--vh', `${viewportHeight * 0.01}px`);
+      };
+
+      window.addEventListener('resize', resizeHandler);
+      resizeHandler();
+
+      return () => window.removeEventListener('resize', resizeHandler);
 
       setLoading(true); //loadingをオンに
 

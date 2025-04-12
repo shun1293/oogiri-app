@@ -2,7 +2,7 @@
 .chat-container {
   width: 100%;
   margin: 0;
-  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   display: flex;
   flex-direction: column;
   background: #fafaf0;
@@ -141,11 +141,13 @@
 .button-group {
   margin-top: 10px;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+  
 }
 
 .button-group button {
-  flex: 1;
+  flex: 1 1 45%;
   padding: 20px 30px;
   border: none;
   border-radius: 40px;
@@ -155,7 +157,10 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
-  text-align: left;
+  align-items: center;
+}
+.button-group button:nth-child(3){
+  flex: 1 1 100%;
 }
 
 button:disabled {
