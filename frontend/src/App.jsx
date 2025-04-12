@@ -2,39 +2,45 @@ import React, { useState, useEffect, useRef } from "react";
 import "./style.css";
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [userAnswer, setUserAnswer] = useState("");
   const [currentPrompt, setCurrentPrompt] = useState("");
   const promptLoaded = useRef(false);
   const API_BASE = import.meta.env.VITE_API_BASE;
+  const bottomRef = useRef(null);
 
   // お題を1回だけ取得
   useEffect(() => {
     const fetchPrompt = async () => {
-      if (promptLoaded.current) return;
+      if (promptLoaded.current) return;//1回しか実行しないようにする
       promptLoaded.current = true;
 
+      setLoading(true); //loadingをオンに
+
       try {
-        const res = await fetch(`${API_BASE}/prompt`);
-        const data = await res.json();
-        setCurrentPrompt(data.prompt);
-        setMessages([{ sender: "bot", text: `【お題】${data.prompt}` }]);
+        const res = await fetch(`${API_BASE}/prompt`); //awaitの中は処理が終わるまで時間が止まり、他は処理が動き続ける。.envファイルの中のflaskURL/promptのjsonお題を取る
+        const data = await res.json();//resの中身のjsonを読んでjsで読めるようにする
+        setCurrentPrompt(data.prompt); //currentPromptの中にdata.promptを入れる
+        setMessages([{ sender: "bot", text: `【お題】${data.prompt}` }]); //messagesの中にこれらのパラメータが状態配列（useState）として入る
       } catch (err) {
-        console.error("お題の取得に失敗しました:", err);
+        console.error("お題の取得に失敗しました:", err);//エラーを取得したときの処理
+      } finally {
+        setLoading(false); //loadingをオフに
       }
     };
-    fetchPrompt();
-  }, []);
+    fetchPrompt();// fetchPromptを実行する
+  }, []); //[]が空だと最初のページ読み込み（マウント）時だけ実行
 
   // 回答送信
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //デフォルトの動作（ページリロード）を止める＝送信メッセージを残す
     if (!input) return;
 
     const buttonId = Date.now();
 
-    const buttonMessage = {
+    const buttonMessage = { //buttonMessageというオブジェクトとその中身のパラメータ（キー）
       id: buttonId,
       sender: "bot",
       type: "buttons",
@@ -44,15 +50,14 @@ function App() {
         example: false,
       },
     };
-
     setMessages((prev) => [
-      ...prev,
-      { sender: "user", text: input },
+      ...prev, //すでに入っている配列たちに
+      { sender: "user", text: input }, //新しいこのトグルを追加→メッセージ履歴が残りながら積み重なる
       buttonMessage,
     ]);
 
-    setUserAnswer(input);
-    setInput("");
+    setUserAnswer(input); //userAnswerの中身をinputにする
+    setInput(""); //inputの中を空っぽにする
   };
 
   // 採点処理
@@ -104,6 +109,7 @@ function App() {
 
   // 新しいお題を出す
   const handleNewPrompt = async () => {
+    setLoading(true); //loadingをオンに
     const res = await fetch(`${API_BASE}/prompt`);
     const data = await res.json();
     setCurrentPrompt(data.prompt);
@@ -111,12 +117,18 @@ function App() {
       ...prev,
       { sender: "bot", text: `【次のお題】${data.prompt}` },
     ]);
+    setLoading(false); //loadingをオフに
   };
+
+  //メッセージが出るたびに最下部に自動スクロール
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [loading,messages]);
 
   return (
     <div className="chat-container">
       <div className="chat-box">
-        {messages.map((msg, idx) => (
+          {messages.map((msg, idx) => (
           <div key={idx} className={`message ${msg.sender}`}>
             {msg.text}
             {msg.type === "buttons" && (
@@ -125,27 +137,42 @@ function App() {
                   onClick={() => handleEvaluate(msg.id)}
                   disabled={msg.disabled?.evaluate}
                 >
-                  AIに採点してもらう
+                  AIの<br />採点結果
                 </button>
 
                 <button
                   onClick={() => handleExample(msg.id)}
                   disabled={msg.disabled?.example}
                 >
-                  AIの模範解答を見る
+                  AIの<br />模範解答
                 </button>
 
-                <button onClick={handleNewPrompt}>次のお題へ</button>
+                <button onClick={handleNewPrompt}>次のお題</button>
               </div>
             )}
           </div>
         ))}
+          {loading ? (
+            <div className="loading-area">
+              <span>お</span>
+              <span>題</span>
+              <span>を</span>
+              <span>生</span>
+              <span>成</span>
+              <span>中</span>
+              <span>…</span>
+              <span>…</span>
+            </div>
+                ) : (
+                   null
+          )}
+        <div ref={bottomRef} />
       </div>
 
       <form onSubmit={handleSubmit} className="input-bar">
         <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={input} //この<input>に入力された値はinputに入る
+          onChange={(e) => setInput(e.target.value)}//入力フォームの内容が変わったら、inputの中をこの<input>のvalueに更新する（setInput）する
           placeholder="さらに解答する"
         />
         <button type="submit">送信</button>
